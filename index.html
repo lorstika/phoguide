@@ -565,6 +565,30 @@ ol.steps li{margin:.45em 0}
 
 
 
+<style id="astronomy-camp-design">
+/* Use the guide's established paper and spectral accent palette. */
+.camp-feature{border:1px solid currentColor;border-inline-start:4px solid #aa4894;padding:1.3rem 1.5rem;margin:1.5rem 0 2rem;border-radius:4px;background:color-mix(in srgb,#aa4894 5%,transparent)}
+.camp-feature h2{margin-top:0}.camp-feature .eyebrow{margin-bottom:.6rem}
+.camp-module-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:1rem;margin:1.5rem 0 3rem}
+.camp-module-grid>a{display:block;border:1px solid color-mix(in srgb,currentColor 28%,transparent);padding:1.25rem;text-decoration:none;border-radius:4px;color:inherit}
+.camp-module-grid>a:hover,.camp-module-grid>a:focus-visible{border-color:#aa4894;background:color-mix(in srgb,#aa4894 7%,transparent)}
+.camp-module-grid h3{margin:.5rem 0;font-size:1.15rem}.camp-module-grid p{margin:.5rem 0 0}
+.camp-reader>section{margin:2.5rem 0}.camp-reader .example,.camp-transfer,.camp-plan{padding:1.3rem;border:1px solid color-mix(in srgb,currentColor 25%,transparent);border-radius:4px}
+.camp-related{margin-top:3rem;padding-top:1.5rem;border-top:2px solid #aa4894;scroll-margin-top:6rem}
+.camp-related details{margin:1rem 0;padding:.8rem;border:1px solid color-mix(in srgb,currentColor 25%,transparent);border-radius:4px}
+.camp-related summary{cursor:pointer;font-weight:600}.camp-problems{list-style:none;padding:0;margin:0}
+.camp-problems li,.camp-lesson-list li{padding:.85rem 0;border-bottom:1px solid color-mix(in srgb,currentColor 16%,transparent);overflow-wrap:anywhere}
+.camp-problems li:last-child,.camp-lesson-list li:last-child{border-bottom:0}.camp-problems small,.camp-lesson-list small{display:block;opacity:.8;margin-top:.3rem}
+.camp-lesson-list{list-style:none;padding:0}.camp-filters{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:1rem}
+.camp-filters label{display:flex;flex-direction:column;gap:.4rem;font-size:.9rem;font-weight:600}.camp-filters input[type=search],.camp-filters select{width:100%;min-height:44px;font:inherit;padding:.6rem;box-sizing:border-box;border:1px solid currentColor;border-radius:3px;background:inherit;color:inherit}
+.camp-filters label.camp-check{grid-column:1/-1;flex-direction:row;align-items:center;min-height:44px}.camp-check input{width:1.1rem;height:1.1rem}
+.camp-paper-list{list-style:none;padding:0}.camp-paper-list li{margin:.7rem 0}.camp-paper-list a{white-space:normal}.camp-paper-list small{display:inline-block;margin-inline-start:.5rem}
+[data-problem-row][hidden],[data-problem-group][hidden]{display:none!important}
+.camp-source-archive ul{overflow-wrap:anywhere}.camp-two-choices .route-card h2{font-size:1.7rem}
+@media(max-width:600px){.camp-module-grid,.camp-filters{grid-template-columns:1fr}.camp-feature{padding:1rem}.camp-reader .actions{display:flex;flex-direction:column}.camp-paper-list small{display:block;margin:.3rem 0}.camp-related details{padding:.6rem}.camp-problems small{font-size:.8rem}}
+@media print{.camp-filters{display:none}.camp-module-grid{display:block}.camp-feature,.camp-transfer{break-inside:avoid}}
+
+</style>
 </head>
 <body>
 <a class="skip" href="#main">Skip to content</a>
@@ -2686,6 +2710,242 @@ $('.skip').addEventListener('click', e => { e.preventDefault(); $('#main').focus
 let rz; window.addEventListener('resize', () => { clearTimeout(rz); rz = setTimeout(() => { const id = currentLesson(); if ($('#band')) spectrum({mode: 'home'}); if (id && $('#mini-band')) spectrum({mode: 'mini', current: id}); }, 150); });
 window.addEventListener('hashchange', route);
 route();
+</script>
+<script>
+/* Original transfer notes. Source problem statements and their limitations remain in SUPPLEMENT. */
+window.ASTRONOMY_CAMP = {
+  version: 1,
+  scope: 'The May selection paper and four dated June 2026 camp-4 papers already supplied in this guide. This is a suggested study sequence, not an official camp timetable.',
+  modules: [
+    {
+      id: 'geometry', title: 'Turn a sky diagram into equations', lessons: ['a02', 'a05', 'a13'],
+      aim: 'Choose the reference frame, angular convention and clock before substituting numbers.',
+      sections: [
+        ['Build a local frame', String.raw`Let latitude be $\phi$, declination $\delta$ and hour angle $H=\mathrm{LST}-\alpha$, increasing westward. A star has altitude $h$ with $\sin h=\sin\phi\sin\delta+\cos\phi\cos\delta\cos H$. This is a dot product of the star direction with the zenith direction. It is valid in either hemisphere; a memorized northern-sky sketch is less general. For azimuth measured from north through east, use both $\cos h\sin A=-\cos\delta\sin H$ and $\cos h\cos A=\sin\delta\cos\phi-\cos\delta\sin\phi\cos H$. Use atan2 to retain the quadrant. At the zenith, azimuth is undefined.`],
+        ['An observing window is a constraint', String.raw`For a minimum altitude $h_0$, solve $\cos H\geq X$, where $X=(\sin h_0-\sin\phi\sin\delta)/(\cos\phi\cos\delta)$. At ordinary nonpolar latitudes and nonpolar declinations the denominator is positive. If $-1<X<1$, the window is $|H|\leq\arccos X$; if $X>1$, the star never reaches the threshold, and if $X<-1$, it stays above it. Treat equality as a tangent case and zero denominators directly in the altitude equation. The window length $2H_0/15$ is in sidereal hours when $H_0$ is in degrees. Intersect it with darkness and the observing date; a civil time needs longitude, time zone and a time conversion.`],
+        ['Separate true sky, image and map', String.raw`Refraction raises apparent altitude. In a small-refraction, plane-parallel approximation $R\simeq(n-1)\tan z$, where $z$ is true zenith distance in radians. Thus the correction tends to zero at the zenith and this approximation fails near the horizon. A photograph also needs orientation, plate scale and projection. For a small field, east displacement is $\Delta\alpha\cos\delta$, not $\Delta\alpha$. A marked sky map can constrain latitude and sidereal time; season is an additional inference involving the Sun, rather than an exact date obtained from the stars alone.`]
+      ],
+      example: {prompt: String.raw`At latitude $30^\circ$ N, how long is a star at $\delta=20^\circ$ above altitude $30^\circ$? Ignore refraction.`, steps: [String.raw`Substitute into the threshold: $X=(0.5-0.5\sin20^\circ)/(\cos30^\circ\cos20^\circ)=0.4043$.`, String.raw`Hence $H_0=66.15^\circ$ and the window is $2H_0/15=8.82$ sidereal hours.`, 'This is the geometric window, not the usable night-time exposure. A date and solar position are still needed.']},
+      check: {prompt: 'Move this observer to the equator while keeping the same star and altitude limit. Does the window grow?', answer: String.raw`No. Now $X=\sin30^\circ/\cos20^\circ=0.5321$, so the window is about 7.71 sidereal hours. A longer night and a longer geometric window are separate questions.`},
+      problems: ['saudi-camp4-assessment-3', 'saudi-camp4-assessment-4', 'saudi-camp4-assessment-6', 'saudi-camp4-assessment-7', 'saudi-camp4-paper-observation-1', 'saudi-camp4-paper-observation-2', 'saudi-may-selection-theory-A2', 'saudi-may-selection-theory-A3', 'saudi-may-selection-theory-A6']
+    },
+    {
+      id: 'radiation', title: 'Follow energy from source to detector', lessons: ['a03', 'a04', 'a09', 'a10'],
+      aim: 'Keep luminosity, irradiance, radiance, flux density and collected energy distinct.',
+      sections: [
+        ['Write the measurement chain', String.raw`An isotropic source of luminosity $L$ gives bolometric irradiance $F=L/(4\pi d^2)$. A detector of effective collecting area $A_{\rm eff}$ exposed for time $t$ receives energy $E=FA_{\rm eff}t$ if the input is steady and efficiency is already included. A spectral measurement instead needs an integral: $E=t\int A_{\rm eff}(\nu)F_\nu\,d\nu$. Replace the integral by $A_{\rm eff}F_\nu\Delta\nu$ only if both factors are nearly constant across the band. A jansky is $10^{-26}\,\mathrm{W\,m^{-2}\,Hz^{-1}}$, not a bolometric flux.`],
+        ['Unresolved disks still have angular area', String.raw`For a uniformly bright disk, $F_\nu=\int I_\nu\cos\theta\,d\Omega\simeq I_\nu\pi(R/d)^2$ when its angular radius is small. Thermal brightness has $I_\nu=B_\nu(T)$ only under the adopted blackbody model. In the Rayleigh–Jeans limit $h\nu\ll kT$, $B_\nu\simeq2kT\nu^2/c^2$. Substituting into the detector equation allows a radius to be inferred from a radio-energy measurement. Keep every bandwidth and time factor: they are part of the measured quantity. A spectral radiance includes inverse steradians; converting a disk's radiance to irradiance uses its solid angle.`],
+        ['Balance power before using a temperature law', String.raw`A spherical planet absorbs $(1-A_B)\pi R^2L_*/(4\pi r^2)$ and, with uniform temperature and emissivity $\epsilon$, emits $4\pi R^2\epsilon\sigma T^4$. Therefore $T=[(1-A_B)L_*/(16\pi\epsilon\sigma r^2)]^{1/4}$. The radius cancels because both areas scale as $R^2$. This cancellation needs the same model assumptions: internal heating, greenhouse transport and day–night redistribution can change the result. Bond albedo belongs in an energy balance; geometric albedo describes directional brightness. Reflected-light brightness also depends on a phase function, not just illuminated fraction.`]
+      ],
+      example: {prompt: 'A steady radio source has 2 Jy across a 1 MHz band. A detector has effective area 10 m² and integrates for 100 s. Estimate the collected energy.', steps: [String.raw`Treat $F_\nu$ and effective area as constant: $E=(2\times10^{-26})(10^6)(10)(100)=2\times10^{-17}\,\mathrm J$.`, 'The units cancel Hz, m² and seconds to leave joules. This estimates received signal energy, not the noise or a detection significance.']},
+      check: {prompt: 'Double the planet radius at fixed orbit, albedo and emissivity. What happens to equilibrium temperature and total emitted power?', answer: 'Temperature is unchanged in this model. Both absorbed and emitted power increase by a factor of four.'},
+      problems: ['saudi-may-selection-theory-A5', 'saudi-may-selection-theory-A8', 'saudi-may-selection-theory-A9', 'saudi-may-selection-theory-A10', 'saudi-may-selection-theory-T4']
+    },
+    {
+      id: 'orbits', title: 'Use conservation laws to change an orbit', lessons: ['a01', 'a10'],
+      aim: 'Separate the relative orbit, its shape, the speed at a point and the time along it.',
+      sections: [
+        ['Choose the two-body system', String.raw`For relative separation $r$ and relative velocity $v$, use $\mu=G(M_1+M_2)$. The specific energy is $\varepsilon=v^2/2-\mu/r$, and the specific angular momentum is $\mathbf h=\mathbf r\times\mathbf v$. For a bound ellipse $a=-\mu/(2\varepsilon)$ and $e^2=1+2\varepsilon h^2/\mu^2$. A negligible-mass satellite permits $\mu\simeq GM$. A launcher's recoil changes the relative velocity: calculate the momentum balance before constructing the orbit. The two objects' individual distances from their barycentre are not the relative separation.`],
+        ['Position stays continuous through an impulse', String.raw`An instantaneous burn changes velocity at the same $r$. Its energy change is $\Delta\varepsilon=\mathbf v\cdot\Delta\mathbf v+|\Delta\mathbf v|^2/2$. This explains why equal prograde speed increments change energy more at a faster part of an orbit. It does not prove that any mission with a low-altitude burn is globally optimal. After any burn, recompute both energy and angular momentum, then check whether the new pericentre intersects the body. A mathematical ellipse through the ground does not describe a continuing spacecraft orbit.`],
+        ['An ellipse needs its own clock', String.raw`For a Hohmann transfer between circular radii $r_1$ and $r_2$, the transfer ellipse has $a_t=(r_1+r_2)/2$. Its coast time is half its period, $t=\pi\sqrt{a_t^3/\mu}$. Subtract circular and transfer speeds at each endpoint to obtain the two burns. For general timing use $M=E-e\sin E=n(t-\tau)$, with $n=2\pi/T$; angles inside this equation are radians. A fraction of true anomaly is not usually that fraction of the period. Combine timing with angular positions to test whether two moving objects actually meet.`]
+      ],
+      example: {prompt: String.raw`Transfer outward from a circular orbit of radius $r$ to one of radius $2r$. Write the burns in units of $v_c=\sqrt{\mu/r}$.`, steps: [String.raw`The transfer axis is $3r/2$. Its pericentre speed is $\sqrt{4/3}\,v_c$, so $\Delta v_1=(\sqrt{4/3}-1)v_c=0.1547v_c$.`, String.raw`Its apocentre speed is $v_c/\sqrt3$ and the outer circular speed is $v_c/\sqrt2$. Thus $\Delta v_2=(1/\sqrt2-1/\sqrt3)v_c=0.1298v_c$.`, String.raw`Total $\Delta v=0.2845v_c$. Coast time is $\pi\sqrt{(3r/2)^3/\mu}$; both burns are prograde.`]},
+      check: {prompt: 'Give the same small prograde speed increment at pericentre and apocentre of one eccentric orbit. Which gives more energy?', answer: String.raw`Pericentre: the term $v\Delta v$ is larger there. For a specified final orbit, however, compare complete maneuvers and constraints.`},
+      problems: ['saudi-camp4-assessment-1', 'saudi-camp4-assessment-5', 'saudi-camp4-tailored-5', 'saudi-may-selection-theory-A4', 'saudi-may-selection-theory-A7']
+    },
+    {
+      id: 'binaries', title: 'Combine a light curve with a velocity curve', lessons: ['a06', 'a08', 'a03'],
+      aim: 'Identify which independent observable supplies each mass, radius and brightness scale.',
+      sections: [
+        ['The orbit supplies a mass scale', String.raw`For period $P$, eccentricity $e$, inclination $i$ and radial-velocity semiamplitudes $K_1,K_2$, the projected relative semimajor axis is $a\sin i=P(K_1+K_2)\sqrt{1-e^2}/(2\pi)$. Momentum balance gives $M_2/M_1=K_1/K_2$. Kepler gives $(M_1+M_2)\sin^3i=P(K_1+K_2)^3(1-e^2)^{3/2}/(2\pi G)$. These are relative-orbit equations: adding only one component's semimajor axis to a total-mass formula loses the other star's motion. If inclination is unknown, the projected mass is not the true mass.`],
+        ['Eclipse depths measure blocked light', String.raw`Write out-of-eclipse flux as $F=J_1\pi R_1^2+J_2\pi R_2^2$ for uniform disks at the same distance, where $J$ is brightness in the observed band. An eclipse removes the brightness of the background star multiplied by the overlap area. A fully hidden star loses its entire flux; a transiting smaller disk removes only an area from the larger star. Thus a depth is not automatically a luminosity ratio or a squared radius ratio. Contact times constrain sums and differences of radii only after choosing inclination, projected orbital speed and eclipse geometry. Limb darkening and grazing contacts invalidate the uniform central-disk shortcut.`],
+        ['Changing masses does not mean fixed separation', String.raw`For a circular orbit, $J_{\rm orb}=M_1M_2\sqrt{Ga/(M_1+M_2)}$. If mass transfer conserves total mass and orbital angular momentum, $a\propto(M_1M_2)^{-2}$ and $P\propto(M_1M_2)^{-3}$. Transfer toward equal masses initially shrinks the orbit; transfer away from equality expands it. Stellar spin, escaping matter and external torque break this idealized conservation law. State which angular momentum is conserved before differentiating.`]
+      ],
+      example: {prompt: 'A circular edge-on binary has period 10 days and velocity semiamplitudes 60 and 90 km/s. Find the two masses.', steps: [String.raw`The mass ratio is $M_2/M_1=60/90=2/3$. The relative axis is $a=864000(150000)/(2\pi)=2.063\times10^{10}\,\mathrm m$.`, String.raw`Using $G=6.6743\times10^{-11}$ gives total mass $6.95\times10^{30}\,\mathrm{kg}\simeq3.50M_\odot$ with $M_\odot=1.9885\times10^{30}\,\mathrm{kg}$.`, 'The slower star has the larger mass: M₁ ≈ 2.10 solar masses and M₂ ≈ 1.40 solar masses.']},
+      check: {prompt: 'Keep these velocity curves and period but change the inclination to 60°. How do the inferred masses change?', answer: String.raw`Both increase by $1/\sin^3 60^\circ=1.540$. The mass ratio is unchanged. Whether the system still eclipses depends on the radii.`},
+      problems: ['saudi-may-selection-theory-T3', 'saudi-camp4-tailored-4', 'saudi-camp4-tailored-6']
+    },
+    {
+      id: 'spectra', title: 'Read a spectrum without overinterpreting it', lessons: ['a09', 'a11', 'a12'],
+      aim: 'Distinguish line displacement, line width, reddening and a model-based kinematic distance.',
+      sections: [
+        ['Different spectral changes encode different physics', String.raw`Define $z=(\lambda_{\rm obs}-\lambda_0)/\lambda_0$. For a small purely radial speed, $v_r\simeq cz$; using frequency instead gives $v_r\simeq-c\,\Delta\nu/\nu_0$. Reddening preferentially removes blue continuum light; it does not itself shift all line centres. Line width combines thermal, turbulent, instrumental and other effects. Gaussian dispersions add in quadrature only when the broadening kernels are appropriately Gaussian and independent. A measured FWHM, a one-dimensional dispersion and a thermal Doppler parameter are different conventions.`],
+        ['Construct the Galactic geometry', String.raw`For circular Galactic rotation in the plane, $v_{\rm LSR}=[\Theta(R)R_0/R-\Theta_0]\sin l$. Here $R$ is galactocentric radius and $l$ is Galactic longitude. With a flat curve $\Theta(R)=\Theta_0$, invert to get $R=R_0/[1+v_{\rm LSR}/(\Theta_0\sin l)]$. Check the velocity frame: heliocentric velocities need correction before using an LSR model. Near $\sin l=0$, this inversion is ill-conditioned. Noncircular motions can dominate small inferred velocity differences.`],
+        ['Radius is not distance or cloud thickness', String.raw`In the Galactic plane, heliocentric distance satisfies $d=R_0\cos l\pm\sqrt{R^2-R_0^2\sin^2l}$. Retain positive real branches. An inner-Galaxy sightline can have a near and a far solution at the same velocity. A line's velocity width need not be depth along the sightline: turbulence, opacity, blended clouds and a velocity gradient all contribute. A rotation-model depth inferred from a width is conditional on those other causes being negligible. This is why a recovered spectrum can complete a numerical exercise without establishing a unique physical cloud size.`]
+      ],
+      example: {prompt: String.raw`Use a flat curve with $R_0=8$ kpc and $\Theta_0=220$ km/s. At $l=30^\circ$, gas has $v_{\rm LSR}=55$ km/s. Find the possible planar distances.`, steps: [String.raw`The radius is $R=8/[1+55/(220\sin30^\circ)]=5.333$ kpc.`, String.raw`The offset from the tangent point is $\sqrt{5.333^2-8^2\sin^230^\circ}=3.528$ kpc.`, String.raw`Hence $d=6.928\pm3.528$, or 3.40 and 10.46 kpc. Both are compatible with this idealized velocity measurement.`]},
+      check: {prompt: 'Does doubling the spectral resolution necessarily resolve the near–far distance ambiguity?', answer: 'No. It improves velocity measurements, but the two distances have the same model velocity. Independent geometric or absorption information is needed.'},
+      problems: ['saudi-may-selection-theory-A1', 'saudi-may-selection-theory-A9', 'saudi-may-selection-theory-T5']
+    },
+    {
+      id: 'lensing', title: 'Keep signs and distance definitions in lensing', lessons: ['a12', 'a03'],
+      aim: 'Turn two image positions into a source position and lens scale without losing a sign.',
+      sections: [
+        ['Use one signed angular axis', String.raw`For a thin point-mass lens, $\beta=\theta-\theta_E^2/\theta$. Put the lens at zero and the images on opposite sides, so $\theta_+>0$ and $\theta_-<0$. The quadratic gives $\beta=\theta_++\theta_-$ and $\theta_E^2=-\theta_+\theta_-$. The square is positive precisely because the roots have opposite signs. A catalogue may print two positive angular separations; assign their signs before using these identities. Perfect alignment gives an Einstein ring rather than a preferred image axis.`],
+        ['A lens mass requires a geometric scale', String.raw`The angular Einstein scale obeys $\theta_E^2=(4GM/c^2)D_{ls}/(D_lD_s)$. Convert angles to radians before inferring $M$. Nearby Euclidean problems may use $D_{ls}=D_s-D_l$; cosmological angular-diameter distances generally do not subtract this way. The two light paths have geometric and gravitational delays. A measured time delay requires the lens potential and the factor $(1+z_l)D_lD_s/D_{ls}$; an angular image separation alone is not a time delay. An extended lens changes the point-mass inversion.`],
+        ['Know what remains underdetermined', String.raw`Image positions constrain combinations of source angle, lens profile and distance. They do not by themselves give a unique mass, both distances and a cosmology. A source exercise supplies extra assumptions to close the system; list those inputs separately from observations. Similarly, a quasar's apparent transverse motion can exceed $c$ through light-arrival geometry: $\beta_{\rm app}=\beta\sin\vartheta/(1-\beta\cos\vartheta)$. This is an apparent rate, not material outrunning light. For cosmological proper motion use $v_{\rm app}=\mu D_A(1+z)$ with consistent observed and source-frame times.`]
+      ],
+      example: {prompt: 'A point lens produces signed images at +0.4 arcsec and −0.1 arcsec. Find the unlensed source angle and the Einstein angle.', steps: [String.raw`The source angle is $\beta=0.4-0.1=0.3$ arcsec.`, String.raw`The squared Einstein angle is $-(0.4)(-0.1)=0.04$ arcsec², hence $\theta_E=0.2$ arcsec.`, 'Substitute either image into the lens equation; both must return +0.3 arcsec. A mass still needs the distances.']},
+      check: {prompt: 'A second system has the same image angles but twice DₗDₛ/Dₗₛ. How does the point-lens mass change?', answer: 'It doubles. The angular scale is fixed and the inferred mass is proportional to that distance combination.'},
+      problems: ['saudi-may-selection-theory-T6', 'saudi-camp4-tailored-1', 'saudi-camp4-tailored-2']
+    },
+    {
+      id: 'cosmology', title: 'Connect expansion, stellar ages and nuclear energy', lessons: ['a08', 'a12', 'a09'],
+      aim: 'Choose an expansion history and distinguish a lookback interval from cosmic age.',
+      sections: [
+        ['Redshift gives a scale-factor ratio', String.raw`For cosmological redshift, $1+z=a_0/a_{\rm em}$. Setting $a_0=1$ gives $a_{\rm em}=1/(1+z)$, but time requires an expansion law. In a constant-$H$ model, $a(t)\propto e^{Ht}$, so lookback time is $H^{-1}\ln(1+z)$. A flat matter-only model has $a\propto t^{2/3}$ and $t(z)=2[3H_0(1+z)^{3/2}]^{-1}$. These are different models, not interchangeable formulas. The general lookback integral is $\int_0^z dz'/[(1+z')H(z')]$. Use exercise parameters rather than treating old course values as current cosmological measurements.`],
+        ['Subtract ages on a single clock', String.raw`If a stellar population is already age $t_*$ when observed at redshift $z_g$, it formed at cosmic time $t_f=t(z_g)-t_*$. A negative result contradicts the combined model and age inputs. Invert the same expansion law to infer formation redshift; do not subtract the age from the present age of the Universe. Radiation in thermal equilibrium cools as $T\propto1/a$ under adiabatic expansion with unchanged relevant degrees of freedom, so $T(z)=T_0(1+z)$ within that model.`],
+        ['Nuclear bookkeeping supplies energy, not a sharp ignition point', String.raw`A reaction's energy is $Q=(\sum m_{\rm initial}-\sum m_{\rm final})c^2$, using consistent nuclear or atomic masses and accounting for leptons. A positive $Q$ does not specify an ignition temperature: rates involve a distribution of particle energies, quantum tunnelling, density and competition with cooling. For a toy primordial-helium estimate with neutron-to-proton ratio $r$ just before assembly and all surviving neutrons in helium-4, $Y\simeq2r/(1+r)$. If the initial ratio is $r_f$ and neutrons decay over interval $\Delta t$, then $r=r_f e^{-\Delta t/\tau_n}$. A supplied half-life $t_{1/2}$ means $\tau_n=t_{1/2}/\ln2$; it is not the mean lifetime.`]
+      ],
+      example: {prompt: 'In a flat matter-only toy universe with present age 12 Gyr, observe a 0.5 Gyr old population at z = 3. When did it form?', steps: [String.raw`Here $t(z)=12/(1+z)^{3/2}$ Gyr. At $z=3$, the cosmic age is $12/8=1.5$ Gyr.`, 'The formation time is 1.5 − 0.5 = 1.0 Gyr after the model Big Bang.', String.raw`Invert $1=12/(1+z_f)^{3/2}$ to obtain $z_f=12^{2/3}-1\simeq4.24$. This answer belongs to the stipulated toy cosmology.`]},
+      check: {prompt: 'In the helium toy model, r = 1/7 just before assembly. Estimate Y. What does a longer decay interval do?', answer: String.raw`$Y=2(1/7)/(1+1/7)=0.25$. A longer interval leaves fewer neutrons and decreases $Y$ when the other assumptions are held fixed.`},
+      problems: ['saudi-may-selection-theory-T2', 'saudi-camp4-assessment-2', 'saudi-camp4-assessment-8', 'saudi-camp4-tailored-3']
+    },
+    {
+      id: 'data', title: 'Build a defensible result from a table or image', lessons: ['a07', 'a04', 'a08', 'a13'],
+      aim: 'Recover the measured quantity, fit a physical model and report what the uncertainty includes.',
+      sections: [
+        ['Calibrate before taking logarithms', String.raw`For a simple linear detector model, subtract bias and exposure-scaled dark signal, divide by a normalized flat field, and subtract the local sky background from aperture counts. Keep exposure times explicit when comparing count rates. Instrumental magnitude is $m_{\rm inst}=-2.5\log_{10}(C/t)$ only for positive net counts in a consistent system. Calibration with a zero point, extinction and any colour term connects this to a standard band. A very uncertain or negative net flux calls for a flux estimate or upper limit, not a logarithm of a negative number.`],
+        ['Choose axes from the physical equation', String.raw`For a proposed relation $R=AP^b$, define $x=\log_{10}(P/P_0)$ and $y=\log_{10}(R/R_0)$ using stated reference units. Then $y=a+bx$. For an unweighted fit, $b=\sum(x_i-\bar x)(y_i-\bar y)/\sum(x_i-\bar x)^2$ and $a=\bar y-b\bar x$. Small fractional uncertainties transform as $\sigma_{\log R}\simeq\sigma_R/(R\ln10)$. Weights based only on vertical errors are appropriate when horizontal errors are negligible; otherwise the regression model must change. Logarithms change the error model, so a fit in log space need not match a nonlinear fit in the original units.`],
+        ['Projection and uncertainty are physical parts of the answer', String.raw`A thin circular ring inclined by $i$ projects to axis ratio $b/a=|\cos i|$. Deprojection divides a minor-axis coordinate by $\cos i$; it amplifies noise near edge-on. Match a scale bar, image orientation and object identity before fitting an orbit. Propagate independent input errors with $\sigma_f^2\simeq\sum_j(\partial f/\partial x_j)^2\sigma_j^2$; add covariance terms for correlated inputs. Scatter between calibrated stars does not measure a shared zero-point error. Plot residuals and keep the original readings: repeated smooth residuals can expose a missing physical effect even when a fitted line looks convincing.`]
+      ],
+      example: {prompt: 'Independent distance and flux uncertainties are 5% and 4%. Estimate the fractional uncertainty of L = 4πd²F.', steps: [String.raw`Logarithmic differentiation gives $dL/L=2\,dd/d+dF/F$. For independent standard uncertainties use $\sigma_L/L=\sqrt{(2\times0.05)^2+0.04^2}=0.1077$.`, 'Report about 10.8% standard uncertainty under these assumptions. Adding 10% + 4% = 14% instead is a first-order worst-case bound, not this quadrature uncertainty.']},
+      check: {prompt: 'Average 25 stars whose distances all use the same uncertain magnitude zero point. Does that zero-point uncertainty shrink by √25?', answer: 'No. The independent random contribution may shrink; a common calibration offset affects all stars together and remains.'},
+      problems: ['saudi-camp4-data-analysis-1', 'saudi-camp4-data-analysis-2', 'saudi-camp4-paper-observation-1', 'saudi-camp4-paper-observation-2', 'saudi-may-selection-theory-T3']
+    }
+  ],
+  sources: [
+    {title: 'IOAA syllabus: scope and conventions', url: 'https://ioaastrophysics.org/resources/ioaa-syllabus'},
+    {title: 'IOAA official past papers and solutions', url: 'https://ioaastrophysics.org/resources/problems-from-past-ioaa'},
+    {title: 'Ned Wright, UCLA: cosmological times and distances', url: 'https://www.astro.ucla.edu/~wright/cosmolog.html'},
+    {title: 'Oxford astrophysics lecture: apparent superluminal motion', url: 'https://www-astro.physics.ox.ac.uk/~astroc1/Lectures_files/lecture10-2011.pdf'}
+  ]
+};
+// Short bridges for the paper's conceptual and mixed-physics questions.
+window.ASTRONOMY_CAMP.modules[0].sections.push(
+  ['Compare emission events with arrival events', String.raw`If emission events are separated by $\Delta t_{\rm em}$ and their source–observer path lengths differ by $\Delta D$, their arrival interval is $\Delta t_{\rm obs}=\Delta t_{\rm em}+\Delta D/c$ in the simple noncosmological model. A changing observer position can therefore produce a changing eclipse delay even if the source clock is uniform. This is the reasoning behind a Rømer-delay measurement. Draw both paths before deciding the sign. The delay is not an actual change in the orbital period.`],
+  ['Phase, seasons and named structures', String.raw`Draw Sun–planet–observer as a triangle. Elongation is the angle at the observer; phase angle is at the planet. At quadrature the observer angle is $90^\circ$, so the planet phase angle is not generally $90^\circ$. For a superior planet in circular coplanar orbits, $\sin\alpha=r_{\rm observer}/r_{\rm planet}$ at quadrature. Seasons follow obliquity and solar longitude relative to the equinox, while perihelion belongs to the orbit's apsidal direction. Their relative precession changes which season is nearest perihelion. Specify the supplied precession rates before estimating a half-cycle. Some questions require recognition: Saturn's Cassini division is the gap between the A and B rings. Identify a named feature from a labelled reference rather than inventing a calculation for it.`]
+);
+window.ASTRONOMY_CAMP.modules[1].sections.push(
+  ['Use dimensions to reject, then reason to select', String.raw`Write a proposed result as a product of dimensional quantities raised to unknown powers. Equate the exponents of mass, length and time on both sides. For example, an energy scale made only from $\hbar$, angular frequency $\omega$ and a dimensionless factor must scale as $\hbar\omega$: $[\hbar]=\mathrm{J\,s}$ and $[\omega]=\mathrm{s^{-1}}$. Units cannot determine an omitted numerical factor or an arbitrary dimensionless function. Spectral densities also need a declared variable: $F_\nu\,d\nu=|F_\lambda\,d\lambda|$, hence $F_\lambda=F_\nu c/\lambda^2$ at corresponding wavelengths. Equal-looking numerical widths in nm and Hz are not the same band.`]
+);
+window.ASTRONOMY_CAMP.modules[2].sections.push(
+  ['Reduce a symmetric collapse to one scale', String.raw`For an initially stationary regular polygon of equal point masses, symmetry can preserve the shape before collision: write every position as $\mathbf r_i=s(t)\mathbf r_{i0}$. Sum the vector forces at one vertex once to find its initial inward acceleration coefficient $K$. Inverse-square scaling then gives $\ddot s=-K/s^2$ when $s$ is dimensionless and $K$ has units of inverse time squared. Multiply by $\dot s$ and use $s(0)=1$, $\dot s(0)=0$ to obtain $\dot s^2=2K(1/s-1)$. The collapse time follows by integrating $ds/|\dot s|$, not by treating the initial acceleration as constant. The model ends at collision; shape-preserving motion is a symmetry assumption, not a generic outcome for perturbed masses.`]
+);
+window.ASTRONOMY_CAMP.modules[5].sections.push(
+  ['Use the conserved quantity appropriate to relativity', String.raw`Near a compact object, define what a source means by work. In a Schwarzschild exterior, a static local observer's measured energy is related to the conserved energy at infinity by $E_\infty=\sqrt{1-2GM/(rc^2)}\,E_{\rm local}$. This relation applies outside the horizon for static observers. A locally applied force integrated over proper distance is not automatically the change in energy measured at infinity. For emission by an isolated free particle, conserve four-momentum: if $P_i=P_f+K$ and the particle's rest mass is unchanged, squaring gives $P_f\cdot K=0$. A future timelike massive-particle momentum has positive scalar product with a nonzero future photon momentum in the +−−− convention, so this emission is impossible without another participant or an internal mass change. A photon carrying energy is not enough; momentum must balance too.`]
+);
+
+</script>
+<script>
+/* Progressive extension of the existing guide. Legacy routes and source records stay valid. */
+const CampGuide = (() => {
+  'use strict';
+  const D = window.SUPPLEMENT, C = window.ASTRONOMY_CAMP;
+  const bankNames = {lesson:'Lesson exercises', saudi:'Saudi courses and exams', ioaa:'IOAA / GeCAA', contests:'OWAO / USAAAO / BAAO', physics:'IPhO / APhO', avber:'Astronomy handouts', kalda:'Jaan Kalda', kevin:'Kevin Zhou'};
+  const bank = k => k==='lesson' ? lessons.flatMap(l=>l.problems.map(p=>({...p,lessonId:l.id}))) : k==='physics' ? Object.values(PROB) : k==='contests' ? D.astronomyContests.problems : D[k]||[];
+  const maps = Object.fromEntries(Object.keys(bankNames).map(k=>[k,new Map(bank(k).map(p=>[p.id,p]))]));
+  const href = (k,p) => k==='lesson'?`#/lesson/${p.lessonId}/${p.id}`:k==='saudi'?`#/saudi/problem/${p.id}`:k==='ioaa'?`#/ioaa/${p.id}`:k==='physics'?`#/olympiads/${p.id}`:k==='contests'?`#/astronomy/contests/${p.id}`:`#/source/${k}/${p.id}`;
+  const isCamp = p => /^saudi-(may-selection|camp4-)/.test(p.id);
+  const campPapers = D.saudiPapers.filter(p=>p.entryIds.some(id=>isCamp({id})));
+  const modulesFor = id => C.modules.filter(m=>m.lessons.includes(id));
+  function related(k,id) {
+    const explicit = new Set(D.lessonConnections?.[id]?.[k]||[]);
+    return bank(k).filter(p=>k==='lesson'?p.lessonId===id:explicit.has(p.id)||(D.problemLessonIds?.[p.id]||[]).includes(id)||(p.lessonIds||[]).includes(id)||(p.lessons||[]).includes(id));
+  }
+  function status(k,p) {
+    if(k==='lesson')return 'Lesson solution';
+    if(k==='contests')return 'Worked explanation';
+    const s=D.organizationCoverage?.statusById?.[p.id];
+    if(s)return ({worked:'Worked explanation',outline:'Outline','needs-input':'Needs further work','observation-method':'Observation method','link-only':'Source link'})[s]||s;
+    if(k==='physics')return SOL[p.id]?.depth==='full'?'Worked explanation':'Outline';
+    return p.coverage==='full'?'Worked explanation':'Read coverage note';
+  }
+  function row(k,p) {
+    const origin=k==='physics'?`${COMP[p.y.comp].short} ${p.y.year} · ${p.number}`:p.collection||p.event||(p.contest?`${p.contest} ${p.year}`:p.handout||p.sourceLocator||p.source||'');
+    return `<li data-problem-row data-bank="${k}" data-camp="${isCamp(p)}"><a href="${href(k,p)}"><strong>${esc(p.title||p.prompt?.slice(0,100)||p.id)}</strong></a><small>${esc(typeof origin==='string'?origin:'')} · ${esc(status(k,p))}${isCamp(p)?' · May–June':''}</small></li>`;
+  }
+  function sourceList(id) {
+    const sources=(D.astronomyResources?.sources||[]).filter(s=>(s.lessonIds||[]).includes(id)&&/^https?:\/\//.test(s.url));
+    return sources.length?`<details class="camp-source-archive"><summary>More related source documents (${sources.length})</summary><p>These are the documents already tagged to this lesson in the source map. A document listing does not imply every question is indexed or solved. Some Drive files require your existing access.</p><ul>${sources.map(s=>`<li><a href="${esc(s.url)}" target="_blank" rel="noopener">${esc(s.title)}</a> · ${esc(s.coverage||'Source only')}</li>`).join('')}</ul></details>`:'';
+  }
+  function groups(id) {
+    return Object.keys(bankNames).map(k=>({kind:k,items:related(k,id)}));
+  }
+  function controls() {return `<div class="camp-filters"><label>Find a related problem<input type="search" data-problem-search placeholder="Binary, lens, 2025…"></label><label>Collection<select data-problem-bank><option value="">All collections</option>${Object.entries(bankNames).map(([k,v])=>`<option value="${k}">${v}</option>`).join('')}</select></label><label class="camp-check"><input type="checkbox" data-camp-only> May–June papers only</label></div><p data-problem-count role="status" aria-live="polite"></p>`;}
+  function relatedSection(l) {
+    const gs=groups(l.id), total=gs.reduce((n,g)=>n+g.items.length,0);
+    return `<section id="source-workshop" class="camp-related" data-problem-browser><span id="olympiad"></span><h2>Related problems for this lesson</h2><p>${total} indexed problems across the collections below. Start with the lesson exercises, then try Saudi and olympiad questions. Each link retains its source, figures and solution coverage. This list covers the current guide; the wider archive still contains unindexed papers.</p>${controls()}${gs.filter(g=>g.items.length).map(g=>`<details data-problem-group${g.kind==='saudi'?' open':''}><summary>${bankNames[g.kind]} (${g.items.length})</summary><ul class="camp-problems">${[...g.items].sort((a,b)=>Number(isCamp(b))-Number(isCamp(a))).map(p=>row(g.kind,p)).join('')}</ul></details>`).join('')}<p class="note">No indexed matches here in: ${gs.filter(g=>!g.items.length).map(g=>bankNames[g.kind]).join(', ')||'none'}.</p>${sourceList(l.id)}<p><a href="#/practice/${l.id}">Open this lesson’s practice list</a> · <a href="#/astronomy/contests">Other astronomy competitions</a> · <a href="https://ioaastrophysics.org/resources/problems-from-past-ioaa" target="_blank" rel="noopener">Official IOAA archive</a></p></section>`;
+  }
+  const btn=(url,label,primary=false)=>`<a class="btn${primary?' primary':''}" href="${url}">${esc(label)}</a>`;
+  const card=(url,title,body)=>`<a class="route-card" href="${url}"><h2>${esc(title)}</h2><p>${esc(body)}</p><span>Open →</span></a>`;
+  const moduleCards=()=>`<div class="camp-module-grid">${C.modules.map((m,i)=>`<a href="#/astronomy/camp/${m.id}"><span class="eyebrow">Method ${i+1}</span><h3>${esc(m.title)}</h3><p>${esc(m.aim)}</p></a>`).join('')}</div>`;
+  function paperLinks() {
+    return `<ul class="camp-paper-list">${campPapers.map(p=>`<li>${btn(`#/${['assessment','tailored'].includes(p.category)?'exams':'saudi'}/${p.id}`,p.label)} <small>${p.entryIds.length} guides</small></li>`).join('')}</ul>`;
+  }
+  function home() {return `<div class="page wide"><header class="start-head"><p class="eyebrow">Physics & astronomy olympiad guide</p><h1>Understand the idea.<br>Then make it work.</h1><p class="lede">Two places to study: learn the reasoning, then practise it on course questions and olympiad papers.</p></header><div class="route-grid camp-two-choices">${card('#/learn','1. Learn','Lessons, derivations and examples. Start with astronomy or revisit a physics prerequisite.')}${card('#/practice','2. Practice','Problems by lesson, Saudi course papers and international competitions. Solutions stay available when you need them.')}</div><aside class="camp-feature"><p class="eyebrow">Astronomy · intensive preparation</p><h2>Make the May–June papers manageable</h2><p>Eight methods connect the foundations to the hardest supplied selection and June camp problems. Work through the reasoning, try a new example, then tackle the original paper.</p><div class="actions">${btn('#/astronomy/camp','Open the May–June path',true)}${btn('#/learn/astronomy','Astronomy foundations')}</div></aside><p>Reading marks are saved in this browser. Source coverage is shown beside every indexed problem. <a href="#/coverage">See remaining gaps</a>.</p></div>`;}
+  function camp(id) {
+    const m=C.modules.find(m=>m.id===id);
+    if(id&&!m)return '<div class="page"><h1>Method not found</h1><a href="#/astronomy/camp">Open the camp path</a></div>';
+    if(!m)return `<div class="page wide"><p class="eyebrow">Learn · astronomy</p><h1>May–June intensive preparation</h1><p class="lede">Build a method you can reuse when the numbers, diagram or object changes.</p><p>${esc(C.scope)}</p><div class="camp-plan"><h2>Use each method in four steps</h2><ol><li>Review the linked foundation lesson and derive the result.</li><li>Close the working and solve the constructed example.</li><li>Change one assumption with the transfer question.</li><li>Attempt the linked Saudi paper, then an olympiad problem from the lesson’s related list.</li></ol></div>${moduleCards()}<section><h2>Finish with the original papers</h2><p>The 33 existing guides in these five paper sets keep their original input and coverage notes. Work the paper in its own order after studying the methods; writing a model and units is part of the solution.</p>${paperLinks()}</section><section><h2>Keep an error notebook</h2><p>For every missed part, record the observation you used, the model you assumed, the first incorrect step and one check that would have exposed it. Redo the question later without looking at the working.</p><div class="actions">${btn('#/astronomy/training','Training desk')}${btn('#/astronomy/revision','Review previous attempts')}${btn('#/astronomy/data-analysis','Data-analysis reader')}</div></section><details><summary>Sources and scope</summary><p>The new examples and transfer questions are original teaching exercises. They are not additional official camp questions. Source-specific questions, measurements and unresolved assumptions are linked below each method. The older intensive-training notes in the source map are separate archive editions; their titles alone do not establish May or June dates.</p><ul>${C.sources.map(s=>`<li><a href="${esc(s.url)}" target="_blank" rel="noopener">${esc(s.title)}</a></li>`).join('')}</ul></details></div>`;
+    const at=C.modules.indexOf(m);
+    return `<article class="page camp-reader"><p class="eyebrow">Learn · May–June · method ${at+1} of ${C.modules.length}</p><h1>${esc(m.title)}</h1><p class="lede">${esc(m.aim)}</p><p><a href="#/astronomy/camp">All eight methods</a></p><h2>Before this method</h2><p>${m.lessons.map(link).join(' · ')}</p>${m.sections.map(([title,body])=>`<section><h2>${esc(title)}</h2>${paras(body)}</section>`).join('')}<section class="example"><p class="eyebrow">Original teaching example</p><h2>Work it through</h2>${paras(m.example.prompt)}<details><summary>Show the model, calculation and checks</summary>${LessonWorkshop.steps(m.example.steps)}</details></section><section class="camp-transfer"><h2>Change one assumption</h2>${paras(m.check.prompt)}<details><summary>Compare your reasoning</summary>${paras(m.check.answer)}</details></section><section><h2>Apply the method to the May–June papers</h2><p>Open the full source problem and attempt it before showing its solution. Several problems combine methods: return to another note whenever the model changes.</p><ul class="camp-problems">${m.problems.map(id=>maps.saudi.get(id)).filter(Boolean).map(p=>row('saudi',p)).join('')}</ul><h3>Take it beyond this camp</h3><p>Open a foundation lesson’s complete list for IOAA, GeCAA, other competitions and handouts using the same ideas.</p><div class="actions">${m.lessons.map(id=>btn('#/practice/'+id,byId[id].title)).join('')}</div></section><nav class="lesson-nav">${at?btn('#/astronomy/camp/'+C.modules[at-1].id,'← Previous method'):btn('#/astronomy/camp','Camp path')}${at<C.modules.length-1?btn('#/astronomy/camp/'+C.modules[at+1].id,'Next method →'):btn('#/practice','Choose a practice set')}</nav><details><summary>Reading and provenance</summary><p>Original explanatory notes using the linked source problems and stated models. Check the original figures and conditions on each problem page.</p><ul>${C.sources.map(s=>`<li><a href="${esc(s.url)}" target="_blank" rel="noopener">${esc(s.title)}</a></li>`).join('')}</ul></details></article>`;
+  }
+  function practice(id) {
+    const l=byId[id];
+    if(id&&!l)return `<div class="page"><h1>Lesson not found</h1><a href="#/practice">Choose a practice collection</a></div>`;
+    if(l)return `<div class="page wide"><p class="eyebrow">Practice · ${esc(NUM[id])}</p><h1>${esc(l.title)}</h1><p>${btn('#/lesson/'+id,'Return to lesson')}</p>${relatedSection(l)}</div>`;
+    return `<div class="page wide"><p class="eyebrow">2. Practice</p><h1>Turn understanding into a solution</h1><p class="lede">Choose a lesson for targeted problems, or combine methods in a complete paper.</p><aside class="camp-feature"><h2>May–June astronomy papers</h2><p>Review a method, attempt its source question, then return here for a full paper.</p>${btn('#/astronomy/camp','Learn the eight methods',true)}${paperLinks()}</aside><section><h2>Practice by lesson</h2><details open><summary>Astronomy · 13 lessons</summary>${lessonChoices(true)}</details><details><summary>Physics prerequisites and extensions · 43 lessons</summary>${lessonChoices(false)}</details></section><section><h2>Choose a collection</h2><div class="route-grid">${card('#/ioaa','IOAA and GeCAA','Theory, data analysis and available team tasks, with source and coverage notes.')}${card('#/astronomy/contests','Other astronomy olympiads','Indexed OWAO, USAAAO and BAAO problems, plus links to the wider source map.')}${card('#/saudi','Saudi homework and papers','Course problem sets from introductory topics to selection-level reasoning.')}${card('#/exams','Saudi assessments and exams','The supplied complete assessments and tailored exam papers.')}${card('#/olympiads','IPhO and APhO','Physics problems that reinforce the methods used in astronomy.')}${card('#/astronomy/training','Training desk','Original practice sessions and review of your previous attempts.')}</div></section><p><a href="#/resources">Handouts and source library</a> · <a href="#/papers">All past-paper collections</a> · <a href="#/coverage">Check coverage and unresolved inputs</a></p></div>`;
+  }
+  function lessonChoices(astro){return `<ul class="camp-lesson-list">${lessons.filter(l=>(l.domain==='Astronomy olympiad')===astro).map(l=>`<li><a href="#/practice/${l.id}">${esc(NUM[l.id])} ${esc(l.title)}</a><small>${groups(l.id).reduce((n,g)=>n+g.items.length,0)} indexed problems</small></li>`).join('')}</ul>`;}
+  function wire() {
+    document.querySelectorAll('[data-problem-browser]').forEach(root=>{
+      const query=root.querySelector('[data-problem-search]'),filter=root.querySelector('[data-problem-bank]'),campOnly=root.querySelector('[data-camp-only]');
+      const update=()=>{
+        const q=query.value.trim().toLocaleLowerCase();let shown=0;
+        root.querySelectorAll('[data-problem-group]').forEach(group=>{
+          let count=0;group.querySelectorAll('[data-problem-row]').forEach(row=>{row.hidden=!!((filter.value&&row.dataset.bank!==filter.value)||(campOnly.checked&&row.dataset.camp!=='true')||(q&&!row.textContent.toLocaleLowerCase().includes(q)));if(!row.hidden)count++;});
+          group.hidden=!count;if(q||filter.value||campOnly.checked)group.open=!!count;shown+=count;
+        });
+        root.querySelector('[data-problem-count]').textContent=shown?`${shown} matching problems. Open a collection to choose a question.`:'No matching indexed problems. Clear a filter or browse the source documents below.';
+      };
+      query.addEventListener('input',update);filter.addEventListener('change',update);campOnly.addEventListener('change',update);update();
+    });
+  }
+  return {home,camp,practice,related,groups,relatedSection,modulesFor,wire,isCamp,campPapers};
+})();
+
+// Extend the existing renderer rather than duplicate its scientific models or routing.
+(() => {
+  const oldLearn=GuideNav.learn, oldLesson=lesson, oldAstroView=AstroPages.view, oldSimpleNav=AstroSimple.nav, oldScope=GuideNav.scope;
+  GuideNav.start=CampGuide.home;
+  GuideNav.learn=t=>{
+    if(!['physics','astronomy'].includes(t))return `<div class="page wide"><p class="eyebrow">1. Learn</p><h1>Build the reasoning before the calculation</h1><p class="lede">Start with a foundation lesson or connect several topics in the intensive astronomy path.</p><aside class="camp-feature"><h2>May–June astronomy intensive</h2><p>Eight reusable methods, worked examples and direct links to the supplied selection and June papers.</p><a class="btn primary" href="#/astronomy/camp">Open the intensive path</a></aside><div class="route-grid"><a class="route-card" href="#/learn/astronomy"><h2>Astronomy foundations</h2><p>13 lessons: coordinates, orbits, light, stars, galaxies, data and observing.</p></a><a class="route-card" href="#/learn/physics"><h2>Physics foundations</h2><p>Mechanics, thermal physics, optics and the tools used throughout astronomy.</p></a></div><p><a href="#/lab">Interactive models</a> · <a href="#/reference">Equations and constants</a> · <a href="#/resources">Reading and original sources</a> · <a href="#/contents">Complete contents</a></p></div>`;
+    const html=oldLearn(t);
+    return t==='astronomy'?html.replace('<nav class="track-switch"','<aside class="camp-feature"><h2>Ready for the May–June intensive?</h2><p>Combine these foundations through eight methods and the linked camp papers.</p><a class="btn primary" href="#/astronomy/camp">Open the intensive path</a></aside><nav class="track-switch"'):html;
+  };
+  GuideNav.practice=()=>CampGuide.practice((location.hash||'').slice(2).split('/')[1]);
+  GuideNav.scope=()=>{const p=(location.hash||'').slice(2).split('/');return p[0]==='practice'&&byId[p[1]]?(p[1].startsWith('a')?'astronomy':'physics'):oldScope();};
+  GuideNav.activePage=(page,parts=[])=>['practice','problems','papers','saudi','exams','olympiads','ioaa','source'].includes(page)||page==='library'&&['kalda','kevin','avber','saudi','ioaa','papers'].includes(parts[1])||page==='astronomy'&&['practice','training','revision','contests'].includes(parts[1])?'practice':'learn';
+  AstroSimple.nav=active=>oldSimpleNav(active).replace(/<ul class="as-main">[\s\S]*?<\/ul>/,'<ul class="as-main"><li class="as-home"><a href="#/astronomy/camp">May–June path</a></li><li><a class="btn" href="#/learn/astronomy">Learn</a></li><li><a class="btn" href="#/practice">Practice</a></li></ul>');
+  AstroPages.view=(section,parts=[])=>section==='astronomy'&&parts[0]==='camp'?CampGuide.camp(parts[1]):section==='astronomy'&&!parts[0]?GuideNav.learn('astronomy'):section==='astronomy'&&parts[0]==='practice'?CampGuide.practice():oldAstroView(section,parts);
+  // Full lists now sit at the actual end of every lesson. Keep the original workshop's solved examples.
+  lesson=l=>{
+    let html=oldLesson(l);if(!l)return html;
+    // The existing workshop uses this ID. Give the final full index the canonical anchor.
+    html=html.replace('id="source-workshop"','id="source-workshop-examples"').replace('id="olympiad"','id="olympiad-examples"');
+    const ms=CampGuide.modulesFor(l.id);
+    if(ms.length)html=html.replace('<div class="objectives">',`<aside class="camp-feature"><h2>Use this lesson in the May–June intensive</h2><ul>${ms.map(m=>`<li><a href="#/astronomy/camp/${m.id}">${esc(m.title)}</a> — ${esc(m.aim)}</li>`).join('')}</ul></aside><div class="objectives">`);
+    html=html.replace('<nav class="lesson-nav"',CampGuide.relatedSection(l)+'<nav class="lesson-nav"');
+    return html;
+  };
+  const nav=document.querySelector('nav.primary');
+  nav.innerHTML='<a href="#/learn" data-page="learn">1. Learn</a><a href="#/practice" data-page="practice">2. Practice</a>';
+  // The existing hashchange handler renders first; the following listener wires new controls afterwards.
+  window.addEventListener('hashchange',CampGuide.wire);
+  route();CampGuide.wire();
+})();
+
 </script>
 </body>
 </html>
